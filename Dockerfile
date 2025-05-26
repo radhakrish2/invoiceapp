@@ -1,15 +1,12 @@
-# Stage 1: Build Angular
-FROM node:18-alpine AS build
+# Step 1: Build Angular app
+FROM node:18 AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 COPY . .
+RUN npm install
 RUN npm run build --prod
 
-# Stage 2: Serve with Nginx
+# Step 2: Serve with NGINX
 FROM nginx:alpine
-COPY --from=build /app/dist/car-app /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-
+COPY --from=builder /app/dist/car-app /usr/share/nginx/html
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
