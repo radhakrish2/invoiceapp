@@ -1,0 +1,58 @@
+<div class="container mt-4">
+  <h2>Create Invoice</h2>
+
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+    <!-- Client Selection -->
+    <div class="form-group mb-3">
+      <label>Client</label>
+      <select class="form-control" formControlName="client">
+        <option *ngFor="let client of clients" [ngValue]="client">{{ client.name }}</option>
+      </select>
+    </div>
+
+    <!-- Invoice Dates -->
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Issue Date</label>
+        <input type="date" class="form-control" formControlName="issueDate" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Due Date</label>
+        <input type="date" class="form-control" formControlName="dueDate" />
+      </div>
+    </div>
+
+    <!-- Invoice Items Table -->
+    <h4>Invoice Items</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="items">
+        <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+          <td><input class="form-control" formControlName="description" /></td>
+          <td><input type="number" class="form-control" formControlName="quantity" (input)="updateTotal(i)" /></td>
+          <td><input type="number" class="form-control" formControlName="unitPrice" (input)="updateTotal(i)" /></td>
+          <td>{{ item.get('total')?.value | number: '1.2-2' }}</td>
+          <td><button class="btn btn-danger btn-sm" (click)="removeItem(i)">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-secondary mb-3" type="button" (click)="addItem()">Add Item</button>
+
+    <!-- Summary -->
+    <div class="mb-3">
+      <p><strong>Subtotal:</strong> {{ subtotal | number: '1.2-2' }}</p>
+      <p><strong>Tax (18%):</strong> {{ tax | number: '1.2-2' }}</p>
+      <p><strong>Total Amount:</strong> {{ totalAmount | number: '1.2-2' }}</p>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save Invoice</button>
+  </form>
+</div>

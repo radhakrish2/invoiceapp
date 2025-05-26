@@ -1,0 +1,96 @@
+<div class="container mt-4">
+  <h2>Edit Invoice</h2>
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+    
+    <div class="mb-3">
+      <label for="client" class="form-label">Client</label>
+
+      <select id="client" class="form-select" formControlName="client">
+       <option *ngFor="let c of clients" [ngValue]="c">{{ c.name }}</option>
+      </select>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="issueDate" class="form-label">Issue Date</label>
+        <input type="date" id="issueDate" name="issueDate"  class="form-control" formControlName="issueDate" />
+      </div>
+      <div class="col-md-6">
+        <label for="dueDate" class="form-label">Due Date</label>
+        <input type="date" id="dueDate" class="form-control" formControlName="dueDate" />
+      </div>
+    </div>
+
+    <h5 class="mt-4">Invoice Items</h5>
+    <div formArrayName="items">
+      <div
+        *ngFor="let item of items.controls; let i = index"
+        [formGroupName]="i"
+        class="border p-3 mb-3 rounded shadow-sm bg-light"
+      >
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <label>Description</label>
+            <input type="text" class="form-control" formControlName="description" />
+          </div>
+          <div class="col-md-2 mb-2">
+            <label>Quantity</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="quantity"
+              (input)="updateTotal(i)"
+              min="1"
+            />
+          </div>
+          <div class="col-md-2 mb-2">
+            <label>Unit Price</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="unitPrice"
+              (input)="updateTotal(i)"
+              min="0"
+            />
+          </div>
+          <div class="col-md-2 mb-2">
+            <label>Total</label>
+            <input type="number" class="form-control" formControlName="total" readonly />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-danger w-100" (click)="removeItem(i)">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <button type="button" class="btn btn-secondary" (click)="addItem()">Add Item</button>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-4 offset-md-8">
+        <div class="border p-3 rounded bg-light">
+          <div class="d-flex justify-content-between">
+            <span>Subtotal:</span>
+            <strong>{{ subtotal | currency }}</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Tax (18%):</span>
+            <strong>{{ tax | currency }}</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Total:</span>
+            <strong>{{ totalAmount | currency }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 text-end">
+      <button type="submit" class="btn btn-primary" [disabled]="invoiceForm.invalid">
+        Update Invoice
+      </button>
+    </div>
+  </form>
+</div>

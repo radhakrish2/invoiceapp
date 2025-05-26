@@ -1,0 +1,66 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Create Invoice</h2>
+    <div>
+      <button class="btn btn-primary me-2" (click)="onAddInvoice()">Add New Invoice</button>
+      <button class="btn btn-secondary" (click)="onAddClient()">Add New Client</button>
+    </div>
+  </div>
+
+  <h2 class="text-center text-primary mb-4">Saved Invoices</h2>
+  <table class="table table-hover table-bordered bg-white">
+    <thead class="table-dark">
+      <tr>
+        <th>Invoice ID</th>
+        <th>Client</th>
+        <th>Issue Date</th>
+        <th>Due Date</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let invoice of invoices">
+        <td>{{ invoice.invoiceId }}</td>
+        <td>{{ invoice.client.name }}</td>
+        <td>{{ invoice.issueDate | date: 'mediumDate' }}</td>
+        <td>{{ invoice.dueDate | date: 'mediumDate' }}</td>
+        <td>{{ invoice.totalAmount | number: '1.2-2' }}</td>
+        <td>
+          <h6>
+            <span class="badge" style="cursor: pointer;" [ngClass]="{
+                  'bg-success': invoice.status === 'PAID',
+                  'bg-warning text-dark': invoice.status === 'PENDING',
+                  'bg-danger': invoice.status === 'OVERDUE',
+                  'bg-dark': invoice.status === 'SENT'
+                }">
+              {{ invoice.status }}
+            </span>
+          </h6>
+        </td>
+
+        <td>
+          <button class="btn btn-sm btn-info me-1" (click)="onEditInvoice(invoice.invoiceId)">
+            Edit
+          </button>
+          <button class="btn btn-sm btn-danger me-1" (click)="onDeleteInvoice(invoice.invoiceId)">
+            Delete
+          </button>
+          <button class="btn btn-sm btn-success me-1" (click)="onPrintInvoice(invoice.invoiceId)">
+            Preview
+          </button>
+
+         
+
+          <button class="btn btn-sm" [ngClass]="invoice.status === 'PAID' ? 'btn-warning' : 'btn-primary'"
+            (click)="onTogglePaid(invoice)">
+            {{ invoice.status === 'PAID' ? 'Mark Unpaid' : 'Mark Paid' }}
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
