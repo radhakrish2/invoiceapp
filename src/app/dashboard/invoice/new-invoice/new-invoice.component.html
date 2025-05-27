@@ -5,7 +5,7 @@
     <!-- Client Selection -->
     <div class="form-group mb-3">
       <label>Client</label>
-      <select class="form-control" formControlName="client">
+      <select class="form-control"  formControlName="client">
         <option *ngFor="let client of clients" [ngValue]="client">{{ client.name }}</option>
       </select>
     </div>
